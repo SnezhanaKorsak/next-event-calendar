@@ -12,7 +12,7 @@ export default function EventDetailPage() {
   const event = getEventById(eventId)
 
   if (!event) {
-    return <p>No event found</p>
+    return <h1 className='center'>No event found</h1>
   }
 
   return (

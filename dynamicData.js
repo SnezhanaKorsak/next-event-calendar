@@ -6,14 +6,14 @@ const DUMMY_EVENTS = [
     location: '200 Ketch Harbour Drive Bronx',
     date: '2023-11-12',
     image: 'images/coding-event.jpg',
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: 'e2',
     title: 'Networking for introverts',
     description: 'We know: Networking is no fun if you are an introvert person. Building a network is a common recommendation for career development. A strong network can help you access unique opportunities, and offer advice to help you grow and handle challenging situations.',
     location: '910 Rockwell Rd. Brooklyn',
-    date: '2023-11-30',
+    date: '2023-12-30',
     image: 'images/introvert-event.jpg',
     isFeatured: true,
   },
@@ -22,7 +22,7 @@ const DUMMY_EVENTS = [
     title: 'Networking for extroverts',
     description: 'Networking should come easily to you, right? Not always. As an extrovert, you face a different set of networking challenges. To truly get the most out of every networking experience, you should visit our event.',
     location: '8006 New Dr. Webster',
-    date: '2023-10-28',
+    date: '2024-01-20',
     image: 'images/extrovert-event.jpg',
     isFeatured: false,
   },
@@ -31,7 +31,7 @@ const DUMMY_EVENTS = [
     title: 'Women Who Code',
     description: 'Our community is for professional women and allies of women in technology careers. We help you build the skills you need to raise your professional profile and achieve greater career success.',
     location: '91 Wild Rose St. New York',
-    date: '2023-11-17',
+    date: '2024-01-17',
     image: 'images/woman-event.jpg',
     isFeatured: true,
   },
@@ -50,7 +50,6 @@ export const getFilteredEvents = (dateFilter) => {
 
   return DUMMY_EVENTS.filter(event => {
     const eventDate = new Date(event.date);
-
     return eventDate.getFullYear() === year && eventDate.getMonth() === month - 1;
   })
 }
