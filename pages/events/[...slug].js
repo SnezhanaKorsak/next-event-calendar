@@ -1,35 +1,47 @@
-import { useRouter } from "next/router";
-
 import EventList from "@/components/events/eventList";
 import ResultsTitle from "@/components/events/resultsTitle";
-import { getFilteredEvents } from "@/dynamicData";
+import { getFilteredEvents } from "@/helpers/utils";
 
-export default function FilteredEventsPage () {
-  const router = useRouter();
-  const filterData = router.query.slug;
+export default function FilteredEventsPage (props) {
+  const { hasError, filteredEvents, date} = props;
 
-  if(!filterData) {
-    return <h1 className='center'>Loading...</h1>
+  if(hasError) {
+    return <h1 className='center'>Invalid filter. Please adjust your values</h1>
   }
+
+  if(filteredEvents.length === 0) {
+    return <h1 className='center'>Sorry, but we didn't find any events for this date</h1>
+  }
+
+  const searchedDate = new Date(date.numYear, date.numMonth - 1);
+
+  return (
+    <div>
+      <ResultsTitle date={searchedDate}/>
+      <EventList events={filteredEvents}/>
+    </div>
+  );
+};
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const filterData = params.slug;
 
   const [selectedYear, selectedMonth] = filterData;
   const numYear = Number(selectedYear);
   const numMonth = Number(selectedMonth)
 
   if(isNaN(numYear) || isNaN(numMonth) || numMonth > 12 || numMonth < 1) {
-    return <h1 className='center'>Invalid filter. Please adjust your values</h1>
+    return {
+      hasError: true,
+    }
   }
-  const filteredEvent = getFilteredEvents({year: numYear, month: numMonth});
-  const date = new Date(numYear, numMonth - 1);
+  const filteredEvents = await getFilteredEvents({year: numYear, month: numMonth});
 
-  if(filteredEvent.length === 0) {
-    return <h1 className='center'>Sorry, but we didn't find any events for this date</h1>
+  return {
+    props: {
+      filteredEvents: filteredEvents,
+      date: {year: numYear, month: numMonth},
+    }
   }
-
-  return (
-    <div>
-      <ResultsTitle date={date}/>
-      <EventList events={filteredEvent}/>
-    </div>
-  );
 }
