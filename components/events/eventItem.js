@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import Button from "../ui/button";
 import DateIcon from "../icons/date-icon";
 import ArrowRightIcon from "../icons/arrow-right-icon";
@@ -18,7 +20,8 @@ export default function EventItem(props) {
 
   return (
     <li className={styles.item}>
-      <img src={'/' + event.image} alt=''/>
+      <Image src={'/' + event.image} alt='' width={320} height={160}/>
+
       <div className={styles.content}>
         <div className={styles.summary}>
           <h2>{event.title}</h2>
