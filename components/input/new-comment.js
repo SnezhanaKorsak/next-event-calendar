@@ -44,11 +44,11 @@ export default function NewComment(props) {
       <div className={classes.row}>
         <div className={classes.control}>
           <label htmlFor='email'>Your email</label>
-          <input type='email' id='email' ref={emailInputRef} />
+          <input type='email' id='email' ref={emailInputRef}/>
         </div>
         <div className={classes.control}>
           <label htmlFor='name'>Your name</label>
-          <input type='text' id='name' ref={nameInputRef} />
+          <input type='text' id='name' ref={nameInputRef}/>
         </div>
       </div>
       <div className={classes.control}>

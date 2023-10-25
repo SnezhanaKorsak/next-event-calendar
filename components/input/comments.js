@@ -1,31 +1,45 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
-import CommentList from './comment-list';
-import NewComment from './new-comment';
+import { NotificationContext } from "@/store/notification-context";
+import NewComment from "@/components/input/new-comment";
+import CommentList from "@/components/input/comment-list";
+
 import classes from './comments.module.css';
 
 export default function Comments(props) {
   const { eventId } = props;
 
+  const notificationCnx = useContext(NotificationContext);
+
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [isFetchingComments, setIsFetchingComments] = useState(false);
+  const [updateComments, setUpdateComments] = useState(false);
 
   useEffect(() => {
     if (showComments) {
+      setIsFetchingComments(true);
+
       fetch('/api/comments/' + eventId)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
+          setIsFetchingComments(false)
           setComments(data.comments);
         });
     }
-  }, [showComments]);
+  }, [showComments, updateComments]);
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
   function addCommentHandler(commentData) {
+    notificationCnx.showNotification({
+      title: 'Sending comment...',
+      message: 'Wait for a moment',
+      status: 'pending',
+    })
+
     fetch('/api/comments/' + eventId, {
       method: 'POST',
       body: JSON.stringify(commentData),
@@ -34,7 +48,21 @@ export default function Comments(props) {
       },
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then(() => {
+        notificationCnx.showNotification({
+          title: 'Success',
+          message: 'Your comment added',
+          status: 'success',
+        })
+        setUpdateComments(true);
+      })
+      .catch(() => {
+        notificationCnx.showNotification({
+          title: 'Error',
+          message: 'Something was wrong',
+          status: 'error',
+        })
+      });
   }
 
   return (
@@ -42,8 +70,9 @@ export default function Comments(props) {
       <button onClick={toggleCommentsHandler}>
         {showComments ? 'Hide' : 'Show'} Comments
       </button>
-      {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList items={comments} />}
+      {showComments && <NewComment onAddComment={addCommentHandler}/>}
+      {showComments && !isFetchingComments && <CommentList items={comments}/>}
+      {showComments && isFetchingComments && <div>Loading...</div>}
     </section>
   );
 }

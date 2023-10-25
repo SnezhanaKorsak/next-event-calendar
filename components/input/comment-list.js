@@ -3,6 +3,10 @@ import classes from './comment-list.module.css';
 export default function CommentList(props) {
   const { items } = props;
 
+  if (!items || items.length === 0) {
+    return null;
+  }
+
   return (
     <ul className={classes.comments}>
       {items.map((item) => (
