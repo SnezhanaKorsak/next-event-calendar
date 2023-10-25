@@ -1,3 +1,5 @@
+import { MongoClient } from "mongodb";
+
 export const getAllEvents = async () => {
   const res = await fetch('https://events-calendar-21ffb-default-rtdb.europe-west1.firebasedatabase.app/events.json');
   const data = await res.json();
@@ -34,4 +36,8 @@ export const getFilteredEvents = async (dateFilter) => {
     const eventDate = new Date(event.date);
     return eventDate.getFullYear() === year && eventDate.getMonth() === month - 1;
   })
+}
+
+export const getMongoClient = async (databaseName) => {
+  return  await MongoClient.connect(`mongodb+srv://Snega:WhYgl7mc2oEae6gY@cluster0.vynq4ec.mongodb.net/${databaseName}?retryWrites=true&w=majority`)
 }
